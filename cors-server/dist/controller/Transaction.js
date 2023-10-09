@@ -9,22 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTransaction = exports.updateTransaction = exports.getAllTransaction = exports.createTransaction = void 0;
-const mongodb_1 = require("mongodb");
+const { ObjectId } = require('mongodb');
 function createTransaction(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { name, transaction } = req.body;
-        const createdTransaction = yield req.collection.insertOne({
+        const { name, transaction: transactionData } = req.body; // Rename 'transaction' to 'transactionData'
+        const transaction = yield req.collection.insertOne({
             name,
-            transaction,
+            transaction: transactionData,
         });
         res.status(200).json({
             message: 'successfully add Transaction',
-            data: createdTransaction,
+            data: transaction
         });
     });
 }
-exports.createTransaction = createTransaction;
 function getAllTransaction(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const transactions = yield req
@@ -33,39 +31,42 @@ function getAllTransaction(req, res) {
             .toArray();
         res.status(200).json({
             message: 'success',
-            data: transactions,
+            data: transactions
         });
     });
 }
-exports.getAllTransaction = getAllTransaction;
 function updateTransaction(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const id = req.params.id;
         const { name, transaction } = req.body;
-        const user = yield req.collection.updateOne({ _id: new mongodb_1.ObjectId(id) }, {
+        yield req.collection.updateOne({ _id: new ObjectId(id) }, {
             $set: {
                 name,
-                transaction,
-            },
+                transaction
+            }
         });
         res.status(200).json({
             message: 'updated',
-            data: transaction,
+            data: transaction // Use 'transaction' instead of 'tra'
         });
     });
 }
-exports.updateTransaction = updateTransaction;
 function deleteTransaction(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { id } = req.params;
-        const book = yield req.collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(id) }, {
+        yield req.collection.findOneAndUpdate({ _id: new ObjectId(id) }, {
             $set: {
                 is_deleted: true,
-            },
+            }
         });
         res.status(200).json({
-            message: 'successfully deleted',
+            message: "successfully deleted"
         });
     });
 }
-exports.deleteTransaction = deleteTransaction;
+module.exports = {
+    createTransaction,
+    getAllTransaction,
+    updateTransaction,
+    deleteTransaction
+};
