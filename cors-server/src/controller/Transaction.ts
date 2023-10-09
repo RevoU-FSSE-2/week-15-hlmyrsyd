@@ -1,11 +1,12 @@
+import { Request, Response } from 'express' 
 const { ObjectId } = require('mongodb');
 
-async function createTransaction(req, res) {
-    const { name, transaction } = req.body;
+async function createTransaction(req: Request, res: Response) {
+    const { name, transaction: transactionData } = req.body; // Rename 'transaction' to 'transactionData'
 
     const transaction = await req.collection.insertOne({
         name,
-        transaction,
+        transaction: transactionData,
     });
 
     res.status(200).json({
@@ -14,27 +15,27 @@ async function createTransaction(req, res) {
     });
 }
 
-async function getAllTransaction(req, res) {
+async function getAllTransaction(req: Request, res: Response) {
     const transactions = await req
-    .collection
-    .find({ is_deleted: {$exists: false}})
-    .toArray();
+        .collection
+        .find({ is_deleted: { $exists: false } })
+        .toArray();
 
     res.status(200).json({
         message: 'success',
         data: transactions
-    })
+    });
 }
 
-async function updateTransaction(req, res) {
+async function updateTransaction(req: Request, res: Response) {
     const id = req.params.id;
-    const {name, transaction} = req.body;
+    const { name, transaction } = req.body;
 
-    const user = await req.collection.updateOne(
+    await req.collection.updateOne(
         { _id: new ObjectId(id) },
         {
             $set: {
-                name, 
+                name,
                 transaction
             }
         }
@@ -42,14 +43,14 @@ async function updateTransaction(req, res) {
 
     res.status(200).json({
         message: 'updated',
-        data: tra
-    })
+        data: transaction // Use 'transaction' instead of 'tra'
+    });
 }
 
-async function deleteTransaction(req, res) {
+async function deleteTransaction(req: Request, res: Response) {
     const { id } = req.params;
-    const book = await req.collection.findOneAndUpdate(
-        { _id: new ObjectId(id)},
+    await req.collection.findOneAndUpdate(
+        { _id: new ObjectId(id) },
         {
             $set: {
                 is_deleted: true,
@@ -59,7 +60,7 @@ async function deleteTransaction(req, res) {
 
     res.status(200).json({
         message: "successfully deleted"
-    })
+    });
 }
 
 module.exports = {
@@ -67,4 +68,4 @@ module.exports = {
     getAllTransaction,
     updateTransaction,
     deleteTransaction
-}
+};
