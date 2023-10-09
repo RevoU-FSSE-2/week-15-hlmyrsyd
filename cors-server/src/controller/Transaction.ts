@@ -1,71 +1,70 @@
-import { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
+const { ObjectId } = require('mongodb');
 
-async function createTransaction(req: Request, res: Response) {
+async function createTransaction(req, res) {
     const { name, transaction } = req.body;
 
-    const createdTransaction = await req.collection.insertOne({
+    const transaction = await req.collection.insertOne({
         name,
         transaction,
     });
 
     res.status(200).json({
         message: 'successfully add Transaction',
-        data: createdTransaction,
+        data: transaction
     });
 }
 
-async function getAllTransaction(req: Request, res: Response) {
+async function getAllTransaction(req, res) {
     const transactions = await req
-        .collection
-        .find({ is_deleted: { $exists: false } })
-        .toArray();
+    .collection
+    .find({ is_deleted: {$exists: false}})
+    .toArray();
 
     res.status(200).json({
         message: 'success',
-        data: transactions,
-    });
+        data: transactions
+    })
 }
 
-async function updateTransaction(req: Request, res: Response) {
+async function updateTransaction(req, res) {
     const id = req.params.id;
-    const { name, transaction } = req.body;
+    const {name, transaction} = req.body;
 
     const user = await req.collection.updateOne(
         { _id: new ObjectId(id) },
         {
             $set: {
-                name,
-                transaction,
-            },
+                name, 
+                transaction
+            }
         }
     );
 
     res.status(200).json({
         message: 'updated',
-        data: transaction,
-    });
+        data: tra
+    })
 }
 
-async function deleteTransaction(req: Request, res: Response) {
+async function deleteTransaction(req, res) {
     const { id } = req.params;
     const book = await req.collection.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(id)},
         {
             $set: {
                 is_deleted: true,
-            },
+            }
         }
     );
 
     res.status(200).json({
-        message: 'successfully deleted',
-    });
+        message: "successfully deleted"
+    })
 }
 
-export {
+module.exports = {
     createTransaction,
     getAllTransaction,
     updateTransaction,
-    deleteTransaction,
-};
+    deleteTransaction
+}

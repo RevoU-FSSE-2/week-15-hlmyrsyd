@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getDataXss, getClickJacking, createClickJacking } from '../controller/preventAttackController';
+import { getDataXss, getClickJacking, createClickJacking } from '../controller/preventAttack';
 
 const router = Router();
 
