@@ -1,12 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
-import cors from 'cors';
+import cors, { CorsOptionsDelegate } from 'cors';
+import { Express } from 'express';
 
-const origin = ["http://127.0.0.1:5500"];
-const partnerOrigin = ["http://192.168.0.134/:53500"];
+const origin: string[] = [
+    "https://https://hlmyrsyd4.netlify.app", 
+    "https://week-9-hlmyrsyd.up.railway.app",
+];
+const partnerOrigin: string[] = [
+    "https://week-15-mnajmytsss.vercel.app" 
+];
 
-const corsOptionDelegate = (req: Request, callback: (error: Error | null, options?: object) => void) => {
-    const clientOrigin = origin.includes(req.header("Origin"));
-    const clientPartnerOrigin = partnerOrigin.includes(req.header("Origin"));
+const corsOptionsDelegate: CorsOptionsDelegate = (req, callback) => {
+    const clientOrigin: boolean = origin.includes(req.header("Origin") || "");
+    const clientPartnerOrigin: boolean = partnerOrigin.includes(req.header("Origin") || "");
 
     if (clientOrigin) {
         callback(null, {
@@ -23,8 +28,8 @@ const corsOptionDelegate = (req: Request, callback: (error: Error | null, option
     }
 };
 
-const corsMiddleware = (app: any) => {
-    app.use(cors(corsOptionDelegate));
+const corsMiddleware = (app: Express): void => {
+    app.use(cors(corsOptionsDelegate));
 };
 
 export default corsMiddleware;

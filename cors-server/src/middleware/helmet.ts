@@ -1,7 +1,7 @@
-import { Application } from 'express';
 import helmet from 'helmet';
+import { Express } from 'express';
 
-const helmetMiddleware = (app: Application) => {
+const helmetMiddleware = (app: Express): void => {
     app.use(helmet());
     app.use(
         helmet({
@@ -9,15 +9,10 @@ const helmetMiddleware = (app: Application) => {
                 directives: {
                     defaultSrc: ["'self'"],
                     scriptSrc: ["'self'"],
-                    styleSrc: ["'self'"],
-                    fontSrc: ["'self'"],
-                    imgSrc: ["'self'"],
+                    objectSrc: ["'none'"],
+                    frameAncestors: ["'none'"],
                 },
             },
-            frameguard: {
-                action: 'deny',
-            },
-            crossOriginEmbedderPolicy: true,
         })
     );
 };
