@@ -2,7 +2,7 @@ import cors, { CorsOptionsDelegate } from 'cors';
 import { Express } from 'express';
 
 const origin: string[] = [
-    "https://https://hlmyrsyd4.netlify.app", 
+    "https://hlmyrsyd4.netlify.app", 
     "https://week-9-hlmyrsyd.up.railway.app",
 ];
 const partnerOrigin: string[] = [
